@@ -181,4 +181,11 @@ public class GodotMyket extends GodotPlugin {
             }
         });
     }
+
+    @UsedByGodot
+    public void disconnect_from_myket() {
+        if (mHelper != null)
+            mHelper.dispose();
+        mHelper = null;
+    }
 }
