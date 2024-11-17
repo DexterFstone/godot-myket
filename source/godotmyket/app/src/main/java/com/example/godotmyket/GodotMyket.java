@@ -68,10 +68,10 @@ public class GodotMyket extends GodotPlugin {
 
     @UsedByGodot
     public void query_inventory_async(boolean query_sku_details, String[] item_skus) {
-        try {
-            getGodot().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        getGodot().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
                     List<String> skus = Arrays.asList(item_skus);
                     mHelper.queryInventoryAsync(query_sku_details, skus, new IabHelper.QueryInventoryFinishedListener() {
                         @Override
@@ -108,12 +108,11 @@ public class GodotMyket extends GodotPlugin {
                             emitSignal("query_inventory_finished", result.isSuccess(), result.getMessage(), inventory);
                         }
                     });
+                } catch (Exception e) {
+                    emitSignal("query_inventory_failed", "Error querying inventory. Another async operation in progress.");
                 }
-            });
-
-        } catch (Exception e) {
-            emitSignal("query_inventory_failed", "Error querying inventory. Another async operation in progress.");
-        }
+            }
+        });
     }
 
     @UsedByGodot
@@ -143,4 +142,5 @@ public class GodotMyket extends GodotPlugin {
             emitSignal("iab_purchase_failed", "Error launching purchase flow. Another async operation in progress.");
         }
     }
+
 }
