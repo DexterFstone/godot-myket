@@ -45,6 +45,8 @@ public class GodotMyket extends GodotPlugin {
         signals.add(new SignalInfo("connection_failed", String.class));
         signals.add(new SignalInfo("query_inventory_finished", Boolean.class, String.class, Dictionary.class));
         signals.add(new SignalInfo("query_inventory_failed", String.class));
+        signals.add(new SignalInfo("iab_purchase_finished", Boolean.class, String.class, Dictionary.class));
+        signals.add(new SignalInfo("iab_purchase_failed", String.class));
         return signals;
     }
 
@@ -111,6 +113,34 @@ public class GodotMyket extends GodotPlugin {
 
         } catch (Exception e) {
             emitSignal("query_inventory_failed", "Error querying inventory. Another async operation in progress.");
+        }
+    }
+
+    @UsedByGodot
+    public void launch_purchase_flow(String sku, String payload) {
+        try {
+            mHelper.launchPurchaseFlow(getActivity(), sku, new IabHelper.OnIabPurchaseFinishedListener() {
+                @Override
+                public void onIabPurchaseFinished(IabResult result, Purchase info) {
+                    if (mHelper == null) return;
+                    Dictionary purchase = new Dictionary();
+                    if (result.isSuccess()) {
+                        purchase.put("order_id", info.getOrderId());
+                        purchase.put("item_type", info.getItemType());
+                        purchase.put("sku", info.getSku());
+                        purchase.put("purchase_time", info.getPurchaseTime());
+                        purchase.put("purchase_state", info.getPurchaseState());
+                        purchase.put("developer_payload", info.getDeveloperPayload());
+                        purchase.put("token", info.getToken());
+                        purchase.put("original_json", info.getOriginalJson());
+                        purchase.put("package_name", info.getPackageName());
+                        purchase.put("signature", info.getSignature());
+                    }
+                    emitSignal("iab_purchase_finished", result.isSuccess(), result.getMessage(), purchase);
+                }
+            }, payload);
+        } catch (Exception e) {
+            emitSignal("iab_purchase_failed", "Error launching purchase flow. Another async operation in progress.");
         }
     }
 }
