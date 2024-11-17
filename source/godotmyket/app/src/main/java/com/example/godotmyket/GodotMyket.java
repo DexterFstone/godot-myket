@@ -47,6 +47,8 @@ public class GodotMyket extends GodotPlugin {
         signals.add(new SignalInfo("query_inventory_failed", String.class));
         signals.add(new SignalInfo("iab_purchase_finished", Boolean.class, String.class, Dictionary.class));
         signals.add(new SignalInfo("iab_purchase_failed", String.class));
+        signals.add(new SignalInfo("consume_finished", Boolean.class, String.class, Dictionary.class));
+        signals.add(new SignalInfo("consume_failed", String.class));
         return signals;
     }
 
@@ -143,4 +145,40 @@ public class GodotMyket extends GodotPlugin {
         }
     }
 
+    @UsedByGodot
+    public void consume_async(Dictionary purchase) {
+        getGodot().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String itemType = (String) purchase.get("item_type");
+                    String json = (String) purchase.get("original_json");
+                    String signature = (String) purchase.get("signature");
+                    Purchase Purchase = new Purchase(itemType, json, signature);
+                    mHelper.consumeAsync(Purchase, new IabHelper.OnConsumeFinishedListener() {
+                        @Override
+                        public void onConsumeFinished(Purchase info, IabResult result) {
+                            if (mHelper == null) return;
+                            Dictionary purchase = new Dictionary();
+                            if (result.isSuccess()) {
+                                purchase.put("order_id", info.getOrderId());
+                                purchase.put("item_type", info.getItemType());
+                                purchase.put("sku", info.getSku());
+                                purchase.put("purchase_time", info.getPurchaseTime());
+                                purchase.put("purchase_state", info.getPurchaseState());
+                                purchase.put("developer_payload", info.getDeveloperPayload());
+                                purchase.put("token", info.getToken());
+                                purchase.put("original_json", info.getOriginalJson());
+                                purchase.put("package_name", info.getPackageName());
+                                purchase.put("signature", info.getSignature());
+                            }
+                            emitSignal("consume_finished", result.isSuccess(), result.getMessage(), purchase);
+                        }
+                    });
+                } catch (Exception e) {
+                    emitSignal("consume_failed", "Error consuming. Another async operation in progress.");
+                }
+            }
+        });
+    }
 }
