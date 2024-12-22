@@ -1,6 +1,7 @@
 package com.example.godotmyket;
 
-import android.util.Log;
+import android.content.Intent;
+import android.net.Uri;
 
 import org.godotengine.godot.Dictionary;
 import org.godotengine.godot.Godot;
@@ -21,7 +22,6 @@ import ir.myket.billingclient.util.SkuDetails;
 
 public class GodotMyket extends GodotPlugin {
     private IabHelper mHelper;
-    private String TAG = "godot";
 
     /**
      * Base constructor passing a {@link Godot} instance through which the plugin can access Godot's
@@ -187,5 +187,49 @@ public class GodotMyket extends GodotPlugin {
         if (mHelper != null)
             mHelper.dispose();
         mHelper = null;
+    }
+
+    @UsedByGodot
+    public void show_intent_comment(String package_name) {
+        if (package_name.isEmpty())
+            package_name = getActivity().getPackageName();
+        String url = "myket://comment?id=" + package_name;
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        getActivity().startActivity(intent);
+    }
+
+    @UsedByGodot
+    public void show_intent_details(String package_name) {
+        if (package_name.isEmpty())
+                package_name = getActivity().getPackageName();
+        String url = "myket://details?id=" + package_name;
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        getActivity().startActivity(intent);
+    }
+
+    @UsedByGodot
+    public void show_intent_download(String package_name) {
+        if (package_name.isEmpty())
+            package_name = getActivity().getPackageName();
+        String url = "myket://download?id=" + package_name;
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        getActivity().startActivity(intent);
+    }
+
+    @UsedByGodot
+    public void show_intent_developer(String package_name) {
+        if (package_name.isEmpty())
+            package_name = getActivity().getPackageName();
+        String url = "myket://developer/" + package_name;
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        getActivity().startActivity(intent);
     }
 }
