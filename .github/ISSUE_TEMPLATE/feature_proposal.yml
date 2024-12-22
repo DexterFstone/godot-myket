@@ -1,0 +1,9 @@
+name: پیشنهاد ویژگی
+description: پیشنهاد ویژگی برای پلاگین مایکت
+body:
+
+- type: textarea
+  attributes:
+    label: توضیحات ویژگی
+  validations:
+    required: true

@@ -1,0 +1,27 @@
+name: گزارش مشکل
+description: گزارش مشکل در پلاگین مایکت
+body:
+
+- type: input
+  attributes:
+    label: نسخه گودو
+  validations:
+    required: true
+
+- type: input
+  attributes:
+    label: نسخه پلاگین
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: توضیحات مشکل
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: مراحل
+  validations:
+    required: true
