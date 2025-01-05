@@ -1,6 +1,9 @@
 package com.example.godotmyket;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import org.godotengine.godot.Dictionary;
@@ -52,8 +55,17 @@ public class GodotMyket extends GodotPlugin {
         return signals;
     }
 
+    public boolean is_connected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+        return connected;
+    }
+
     @UsedByGodot
     public void connect_to_myket(String public_key) {
+        if (!is_connected()) return;
         mHelper = new IabHelper(getActivity(), public_key);
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             @Override
@@ -203,7 +215,7 @@ public class GodotMyket extends GodotPlugin {
     @UsedByGodot
     public void show_intent_details(String package_name) {
         if (package_name.isEmpty())
-                package_name = getActivity().getPackageName();
+            package_name = getActivity().getPackageName();
         String url = "myket://details?id=" + package_name;
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
