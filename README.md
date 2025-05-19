@@ -82,7 +82,6 @@ func _on_inventory_received(is_success: bool, message: String, inventory: Invent
 func _on_inventory_failed(message: String):
 	printerr("Myket: خطا در دریافت اطلاعات محصولات - ", message)
 
-# مثال استفاده:
 func _ready():
 	fetch_inventory(["sku_item_1", "sku_item_2"])
 ```
@@ -108,7 +107,6 @@ func _on_purchase_success(is_success: bool, message: String, purchase: Purchase)
 func _on_purchase_failed(message: String):
 	printerr("Myket: خطا در خرید - ", message)
 
-# مثال استفاده:
 func on_buy_button_pressed(product_sku):
 	purchase_item(product_sku)
 ```
@@ -133,7 +131,6 @@ func _on_consume_success(is_success: bool, message: String, purchase: Purchase):
 func _on_consume_failed(message: String):
 	printerr("Myket: خطا در مصرف محصول - ", message)
 
-# مثال استفاده (فرض بر اینکه یک شیء Purchase در دسترس دارید):
 func process_purchase_for_consumption(purchase: Purchase):
 	consume_item(purchase)
 ```
