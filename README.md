@@ -42,7 +42,7 @@
 
 ### اتصال به مایکت
 
-اتصال به مایکت به صورت خودکار هنگام آماده شدن نود (`_ready`) انجام می‌شود. همچنین می‌توانید با فراخوانی متد `connect_to_myket(public_key: String = "")` به صورت دستی این کار را انجام دهید.
+اتصال به مایکت به صورت خودکار هنگام آماده شدن نود (`_ready`) انجام می‌شود. همچنین می‌توانید با فراخوانی متد `connect_to_myket` به صورت دستی این کار را انجام دهید.
 
 ```gdscript
 var myket_node = get_node("Myket")
@@ -60,7 +60,7 @@ func _on_connection_failed(message: String):
 
 ### دریافت اطلاعات محصولات (Query Inventory)
 
-از متد `query_inventory_async(refresh: bool, skus: Array[String])` برای دریافت لیست محصولات قابل فروش و خریدهای کاربر استفاده کنید.
+از متد `query_inventory_async` برای دریافت لیست محصولات قابل فروش و خریدهای کاربر استفاده کنید.
 
 ```gdscript
 func fetch_inventory(skus: Array[String]):
@@ -89,7 +89,7 @@ func _ready():
 
 ### شروع فرآیند خرید
 
-برای شروع فرآیند خرید یک محصول، از متد `launch_purchase_flow(sku: String, developer_payload: String = "")` استفاده کنید.
+برای شروع فرآیند خرید یک محصول، از متد `launch_purchase_flow` استفاده کنید.
 
 ```gdscript
 func purchase_item(sku: String, developer_payload: String = ""):
@@ -115,7 +115,7 @@ func on_buy_button_pressed(product_sku):
 
 ### مصرف محصول
 
-برای مصرف یک محصول خریداری شده (محصولات یک‌بار مصرف)، از متد `consume_async(purchase: Purchase)` استفاده کنید.
+برای مصرف یک محصول خریداری شده (محصولات یک‌بار مصرف)، از متد `consume_async` استفاده کنید.
 
 ```gdscript
 func consume_item(purchase_data: Purchase):
@@ -140,7 +140,7 @@ func process_purchase_for_consumption(purchase: Purchase):
 
 ### قطع اتصال از مایکت
 
-برای قطع اتصال از سرویس مایکت و آزادسازی منابع، از متد `disconnect_from_myket()` استفاده کنید.
+برای قطع اتصال از سرویس مایکت و آزادسازی منابع، از متد `disconnect_from_myket` استفاده کنید.
 
 ```gdscript
 func disconnect_myket_service():
@@ -152,22 +152,22 @@ func disconnect_myket_service():
 ## سیگنال‌ها
 
 * سیگنال `connection_succeed`: بدون پارامتر. هنگامی که اتصال به مایکت با موفقیت برقرار شود، این سیگنال منتشر می‌شود.
-* `connection_failed(message: String)`: پارامتر `message` از نوع `String`. در صورت بروز خطا در اتصال به مایکت، این سیگنال به همراه پیام خطا منتشر می‌شود.
-* سیگنال `query_inventory_finished(is_success: bool, message: String, inventory: Inventory)`: پارامتر `inventory` از نوع `Inventory`. پس از دریافت اطلاعات محصولات و خریدهای کاربر، این سیگنال منتشر می‌شود.
-* سیگنال `query_inventory_failed(message: String)`: پارامتر `message` از نوع `String`. در صورت بروز خطا در دریافت اطلاعات محصولات، این سیگنال به همراه پیام خطا منتشر می‌شود.
-* سیگنال `iab_purchase_finished(is_success: bool, message: String, purchase: Purchase)`: پارامتر `purchase` از نوع `Purchase`. پس از تکمیل موفقیت‌آمیز فرآیند خرید، این سیگنال منتشر می‌شود.
-* سیگنال `iab_purchase_failed(message: String)`: پارامتر `message` از نوع `String`. در صورت بروز خطا در فرآیند خرید، این سیگنال به همراه پیام خطا منتشر می‌شود.
-* سیگنال `consume_finished(is_success: bool, message: String, purchase: Purchase)`: پارامتر `purchase` از نوع `Purchase`. پس از مصرف موفقیت‌آمیز یک محصول، این سیگنال منتشر می‌شود.
-* سیگنال `consume_failed(message: String)`: پارامتر `message` از نوع `String`. در صورت بروز خطا در فرآیند مصرف محصول، این سیگنال به همراه پیام خطا منتشر می‌شود.
+* سیگنال `connection_failed`: پارامتر `message` از نوع `String`. در صورت بروز خطا در اتصال به مایکت، این سیگنال به همراه پیام خطا منتشر می‌شود.
+* سیگنال `query_inventory_finished`: پارامتر `inventory` از نوع `Inventory`. پس از دریافت اطلاعات محصولات و خریدهای کاربر، این سیگنال منتشر می‌شود.
+* سیگنال `query_inventory_failed`: پارامتر `message` از نوع `String`. در صورت بروز خطا در دریافت اطلاعات محصولات، این سیگنال به همراه پیام خطا منتشر می‌شود.
+* سیگنال `iab_purchase_finished`: پارامتر `purchase` از نوع `Purchase`. پس از تکمیل موفقیت‌آمیز فرآیند خرید، این سیگنال منتشر می‌شود.
+* سیگنال `iab_purchase_failed`: پارامتر `message` از نوع `String`. در صورت بروز خطا در فرآیند خرید، این سیگنال به همراه پیام خطا منتشر می‌شود.
+* سیگنال `consume_finished`: پارامتر `purchase` از نوع `Purchase`. پس از مصرف موفقیت‌آمیز یک محصول، این سیگنال منتشر می‌شود.
+* سیگنال `consume_failed`: پارامتر `message` از نوع `String`. در صورت بروز خطا در فرآیند مصرف محصول، این سیگنال به همراه پیام خطا منتشر می‌شود.
 
 ## کلاس `Intent`
 
 کلاس `Intent` شامل متدهای استاتیک برای باز کردن صفحات مختلف اپلیکیشن مایکت از طریق Intent است:
 
-* متد `show_comment(package_name: String = "")`: پارامتر `package_name` از نوع `String`. باز کردن صفحه نظرات برنامه با نام بسته مشخص.
-* متد `show_details(package_name: String = "")`: پارامتر `package_name` از نوع `String`. باز کردن صفحه جزئیات برنامه با نام بسته مشخص.
-* متد `show_download(package_name: String = "")`: پارامتر `package_name` از نوع `String`. باز کردن صفحه دانلود برنامه با نام بسته مشخص.
-* متد `show_developer(package_name: String = "")`: پارامتر `package_name` از نوع `String`. باز کردن صفحه توسعه‌دهنده با نام بسته مشخص.
+* متد `show_comment`: پارامتر `package_name` از نوع `String`. باز کردن صفحه نظرات برنامه با نام بسته مشخص.
+* متد `show_details`: پارامتر `package_name` از نوع `String`. باز کردن صفحه جزئیات برنامه با نام بسته مشخص.
+* متد `show_download`: پارامتر `package_name` از نوع `String`. باز کردن صفحه دانلود برنامه با نام بسته مشخص.
+* متد `show_developer`: پارامتر `package_name` از نوع `String`. باز کردن صفحه توسعه‌دهنده با نام بسته مشخص.
 
 ```gdscript
 func _on_rate_button_pressed():
@@ -180,4 +180,3 @@ func _on_other_app_button_pressed(developer_package: String):
 	Myket.Intent.show_developer(developer_package)
 ```
 
-آیا منظور شما به این شکل بود؟ من سعی کردم تا حد امکان نوع پارامترها را در مثال‌های کد مشخص کنم.
