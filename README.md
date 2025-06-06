@@ -32,6 +32,8 @@
 
 1.  پوشه `myket` موجود در این ریپو را به پوشه `addons` پروژه گودو خود کپی کنید.
 2.  در ویرایشگر گودو، به `Project > Project Settings > Plugins` بروید و پلاگین `Myket` را فعال کنید.
+3.  به `Project > Install Android Build Template` رفته و روی `Istall` کلیک کنید.
+4.  از منوی `Project > Tools > Apply Myket Manifest Placeholders` را انتخاب کنید تا تغییرات مربوط به اندروید منیفست اعمال شوند.
 
 ## استفاده
 
