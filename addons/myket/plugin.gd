@@ -2,13 +2,19 @@
 extends EditorPlugin
 
 const MENU_NAME: String = "Apply Myket Manifest Placeholders..."
+const CURRENT_PLACEHOLDERS: String = (
+	"        manifestPlaceholders = [\n"
+	+ "            godotEditorVersion: getGodotEditorVersion(),\n"
+	+ "            godotRenderingMethod: getGodotRenderingMethod()\n"
+	+ "        ]"
+)
 const MANIFEST_PLACEHOLDERS: String = (
-	"manifestPlaceholders = [godotEditorVersion: getGodotEditorVersion()]\n"
-	+ "	def marketApplicationId = \"ir.mservices.market\"\n" \
-	+ "	def marketBindAddress = \"ir.mservices.market.InAppBillingService.BIND\"\n"
-	+ "	manifestPlaceholders += [marketApplicationId: \"${marketApplicationId}\",\n"
-	+ "		marketBindAddress  : \"${marketBindAddress}\",\n"
-	+ "		marketPermission   : \"${marketApplicationId}.BILLING\"]"
+	CURRENT_PLACEHOLDERS
+	+ "\n\tdef marketApplicationId = \"ir.mservices.market\"\n" \
+	+ "\tdef marketBindAddress = \"ir.mservices.market.InAppBillingService.BIND\"\n"
+	+ "\tmanifestPlaceholders += [marketApplicationId: \"${marketApplicationId}\",\n"
+	+ "\t\tmarketBindAddress  : \"${marketBindAddress}\",\n"
+	+ "\t\tmarketPermission   : \"${marketApplicationId}.BILLING\"]"
 )
 
 var export_plugin : AndroidExportPlugin
@@ -35,7 +41,8 @@ func _add_manifest_placeholders() -> void:
 	if _has_manifest_placeholders(): return
 	var file: FileAccess = FileAccess.open("res://android/build/build.gradle",FileAccess.READ_WRITE)
 	var text: String = file.get_as_text()
-	text = text.replace("manifestPlaceholders = [godotEditorVersion: getGodotEditorVersion()]", MANIFEST_PLACEHOLDERS)
+	print(text.find(CURRENT_PLACEHOLDERS))
+	text = text.replace(CURRENT_PLACEHOLDERS, MANIFEST_PLACEHOLDERS)
 	file.store_string(text)
 
 class AndroidExportPlugin extends EditorExportPlugin:
