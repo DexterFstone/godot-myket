@@ -158,16 +158,13 @@ public class GodotMyket extends GodotPlugin {
     }
 
     @UsedByGodot
-    public void consume_async(Dictionary purchase) {
+    public void consume_async(String item_type, String original_json, String signature) {
         getGodot().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String itemType = (String) purchase.get("item_type");
-                    String json = (String) purchase.get("original_json");
-                    String signature = (String) purchase.get("signature");
-                    Purchase Purchase = new Purchase(itemType, json, signature);
-                    mHelper.consumeAsync(Purchase, new IabHelper.OnConsumeFinishedListener() {
+                    Purchase purchase = new Purchase(item_type, original_json, signature);
+                    mHelper.consumeAsync(purchase, new IabHelper.OnConsumeFinishedListener() {
                         @Override
                         public void onConsumeFinished(Purchase info, IabResult result) {
                             if (mHelper == null) return;

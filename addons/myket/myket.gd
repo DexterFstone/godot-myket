@@ -49,7 +49,7 @@ func launch_purchase_flow(sku: String, payload: String = "") -> void:
 
 func consume_async(purchase: Purchase) -> void:
 	if not _has_myket(): return
-	_plugin.consume_async(purchase._get_data())
+	_plugin.consume_async(purchase.get_item_type(), purchase.get_original_json(), purchase.get_signature())
 	if not _plugin.is_connected("consume_finished", __on_consume_finished):
 		_plugin.consume_finished.connect(__on_consume_finished, CONNECT_ONE_SHOT)
 	if not _plugin.is_connected("consume_failed", __on_consume_failed):

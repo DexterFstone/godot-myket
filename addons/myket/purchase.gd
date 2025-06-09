@@ -24,10 +24,11 @@ func _init(info: Dictionary) -> void:
 	package_name = info.get("package_name", "")
 	signature = info.get("signature", "")
 
-func _get_data() -> Dictionary:
-	var new_purchase: Dictionary = {
-		"item_type" : item_type,
-		"original_json" : original_json,
-		"signature" : signature
-	}
-	return new_purchase
+func get_item_type() -> String:
+	return item_type
+
+func get_original_json() -> String:
+	return original_json
+
+func get_signature() -> String:
+	return signature

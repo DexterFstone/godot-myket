@@ -41,7 +41,6 @@ func _add_manifest_placeholders() -> void:
 	if _has_manifest_placeholders(): return
 	var file: FileAccess = FileAccess.open("res://android/build/build.gradle",FileAccess.READ_WRITE)
 	var text: String = file.get_as_text()
-	print(text.find(CURRENT_PLACEHOLDERS))
 	text = text.replace(CURRENT_PLACEHOLDERS, MANIFEST_PLACEHOLDERS)
 	file.store_string(text)
 
