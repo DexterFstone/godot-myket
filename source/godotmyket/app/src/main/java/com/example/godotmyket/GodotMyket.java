@@ -3,6 +3,8 @@ package com.example.godotmyket;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
@@ -56,16 +58,33 @@ public class GodotMyket extends GodotPlugin {
     }
 
     public boolean is_connected() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
-        return connected;
+        if (connectivityManager == null) return false;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) { // API 29+
+            Network network = connectivityManager.getActiveNetwork();
+            if (network == null) return false;
+
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+            if (capabilities == null) return false;
+
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET);
+        } else {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
+        }
     }
 
     @UsedByGodot
-    public void connect_to_myket(String public_key) {
-        if (!is_connected()) return;
+    public void open_connection(String public_key) {
+        if (!is_connected()) {
+            emitSignal("connection_failed", "No internet connection.");
+            return;
+        }
         mHelper = new IabHelper(getActivity(), public_key);
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             @Override
@@ -82,7 +101,7 @@ public class GodotMyket extends GodotPlugin {
 
     @UsedByGodot
     public void query_inventory_async(boolean query_sku_details, String[] item_skus) {
-        getGodot().runOnUiThread(new Runnable() {
+        getGodot().runOnHostThread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -159,7 +178,7 @@ public class GodotMyket extends GodotPlugin {
 
     @UsedByGodot
     public void consume_async(String item_type, String original_json, String signature) {
-        getGodot().runOnUiThread(new Runnable() {
+        getGodot().runOnHostThread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -192,7 +211,7 @@ public class GodotMyket extends GodotPlugin {
     }
 
     @UsedByGodot
-    public void disconnect_from_myket() {
+    public void close_connection() {
         if (mHelper != null)
             mHelper.dispose();
         mHelper = null;
